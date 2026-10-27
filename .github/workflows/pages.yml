@@ -1,0 +1,36 @@
+# Publishes the game to GitHub Pages on every push to main.
+# Set the repository variable LOONFIRE_SERVER (Settings → Secrets and variables → Actions → Variables)
+# to your game server, e.g. wss://loonfire.onrender.com — players then connect with zero setup.
+# (The older EMBERWIND_SERVER variable still works.)
+# Optional: SITE_URL if the site lives somewhere other than https://playloonfire.github.io (e.g. a custom domain).
+name: Deploy game to GitHub Pages
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: true
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the game with the server baked in
+        env:
+          LOONFIRE_SERVER: ${{ vars.LOONFIRE_SERVER || vars.EMBERWIND_SERVER }}
+          SITE_URL: ${{ vars.SITE_URL }}
+        run: sh build.sh
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: out/site
+      - id: deployment
+        uses: actions/deploy-pages@v4

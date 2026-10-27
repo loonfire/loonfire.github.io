@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Loonfire — Balloon Wars | Free Hot-Air Balloon Battle Game, Online & Local</title>
+<meta name="description" content="Loonfire is a free hot-air balloon battle game in your browser. Duel the AI, a friend on one screen, online with ranked matchmaking, or on the same Wi-Fi. No download — phone, tablet, PC and controllers.">
+<meta name="keywords" content="Loonfire, balloon wars, balloon game, hot air balloon battle, free browser game, online multiplayer, local multiplayer, 2 player game, controller support, mobile web game">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<link rel="canonical" href="__SITE_URL__/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Loonfire">
+<meta property="og:title" content="Loonfire — Balloon Wars Beneath the Moon">
+<meta property="og:description" content="A free balloon battle game you play in the browser. Duel the AI, a friend on one screen, online, or on the same Wi-Fi.">
+<meta property="og:url" content="__SITE_URL__/">
+<meta property="og:image" content="__SITE_URL__/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Two armed hot-air balloons duelling over a moonlit mountain valley — Loonfire, Balloon Wars">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Loonfire — Balloon Wars Beneath the Moon">
+<meta name="twitter:description" content="A free balloon battle game for phone, tablet and PC. Online, local Wi-Fi or vs. AI.">
+<meta name="twitter:image" content="__SITE_URL__/og-image.png">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<meta name="application-name" content="Loonfire">
+<meta name="apple-mobile-web-app-title" content="Loonfire">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "VideoGame",
+  "name": "Loonfire",
+  "alternateName": "Loonfire: Balloon Wars",
+  "url": "__SITE_URL__/",
+  "image": "__SITE_URL__/og-image.png",
+  "description": "A free browser game of armed hot-air balloon duels beneath the moon. Play against the Wind Pilot AI, a friend on the same screen, online with ranked matchmaking, or on the same Wi-Fi.",
+  "genre": ["Action", "Arcade", "Shooter"],
+  "gamePlatform": ["Web browser", "Mobile", "PC"],
+  "applicationCategory": "Game",
+  "operatingSystem": "Any",
+  "playMode": ["SinglePlayer", "MultiPlayer"],
+  "numberOfPlayers": { "@type": "QuantitativeValue", "minValue": 1, "maxValue": 2 },
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "inLanguage": "en"
+}
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#05070f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+/*__FONTS__*/
+</style>
+<style>
+  :root{
+    --ink:#05070f; --night:#0a0f22; --panel:rgba(10,14,30,.72); --line:rgba(170,190,255,.14);
+    --brass:#f2c66d; --ember:#ff7a4d; --teal:#3fd6c4; --moon:#cfd9ff; --cream:#f1ead9; --dim:#8d97b8;
+  }
+  *{box-sizing:border-box;}
+  html,body{ margin:0; padding:0; height:100%; overflow:hidden; background:var(--ink); font-family:'Rajdhani',sans-serif; color:var(--cream); -webkit-font-smoothing:antialiased; }
+  .stage{ position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:radial-gradient(ellipse at 50% 30%,#0e1430 0%,#03040a 100%); }
+  #wrap{ position:relative; width:90vw; height:60vw; --s:1; --pz:1; box-shadow:0 0 0 1px #000, 0 24px 80px rgba(0,0,0,.7); overflow:hidden; background:#000; }
+  #wrap canvas{ display:block; width:100%; height:100%; position:absolute; inset:0; }
+  h1,h2{ font-family:'Cinzel',Georgia,serif; font-weight:400; margin:0; letter-spacing:.5px; }
+
+  /* ---------- overlays ---------- */
+  .overlay{ position:absolute; inset:0; display:flex; overflow:auto; text-align:center; z-index:30;
+    background:radial-gradient(ellipse at 50% 35%, rgba(14,20,46,.55), rgba(3,5,12,.88)); backdrop-filter: blur(3px); }
+  .panel{ max-width:720px; width:100%; padding:26px 34px; margin:auto; zoom:var(--pz); }
+  .title-line{ font-family:'Cinzel',Georgia,serif; font-size:clamp(34px,6vw,60px); letter-spacing:3px;
+    background:linear-gradient(180deg,#fff3cf 0%,#f2c66d 45%,#d9773e 100%); -webkit-background-clip:text; background-clip:text; color:transparent;
+    filter:drop-shadow(0 0 22px rgba(242,170,90,.35)) drop-shadow(0 3px 0 rgba(0,0,0,.5)); line-height:1.05; }
+  .title-sub{ font-size:clamp(11px,1.6vw,14px); letter-spacing:5px; color:var(--moon); margin-top:8px; text-transform:uppercase; opacity:.8; }
+  .tagline{ margin:14px 0 18px; font-size:clamp(13px,1.8vw,16px); color:var(--cream); opacity:.8; font-style:italic; }
+  .modes{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-bottom:16px; }
+  button.mode-btn{ font-family:'Rajdhani',sans-serif; font-weight:700; font-size:14px; letter-spacing:.6px; padding:12px 22px;
+    background:linear-gradient(180deg,#f6d385,#d29a48); color:#2a1a04; border:none; border-radius:8px; cursor:pointer;
+    box-shadow:0 0 0 1px rgba(255,230,170,.4) inset, 0 3px 0 #7d5a1a, 0 8px 20px rgba(0,0,0,.4), 0 0 24px rgba(242,170,90,.18); transition:transform .08s ease, filter .12s; }
+  button.mode-btn:hover{ transform:translateY(-2px); filter:brightness(1.07); }
+  button.mode-btn:active{ transform:translateY(1px); }
+  button.mode-btn.ghost{ background:linear-gradient(180deg,rgba(40,52,92,.9),rgba(20,27,52,.9)); color:var(--cream); box-shadow:0 0 0 1px var(--line) inset, 0 3px 0 #070a16, 0 8px 20px rgba(0,0,0,.4); }
+  button.mode-btn.danger{ background:linear-gradient(180deg,#ff8a62,#c4472a); color:#2a0b03; box-shadow:0 3px 0 #6e2412, 0 8px 20px rgba(0,0,0,.4); }
+  button.mode-btn.small{ padding:9px 16px; font-size:12.5px; }
+  button:focus-visible, summary:focus-visible, input:focus-visible{ outline:2px solid var(--teal); outline-offset:2px; }
+  .diff-row{ display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-bottom:10px; }
+  button.diff-btn{ font-family:'Rajdhani',sans-serif; font-weight:600; font-size:12.5px; padding:8px 14px; background:rgba(20,27,52,.85); color:var(--cream);
+    border:1px solid var(--line); border-radius:7px; cursor:pointer; transition:all .12s ease; }
+  button.diff-btn:hover{ border-color:var(--brass); transform:translateY(-1px); }
+  button.diff-btn.active{ background:linear-gradient(180deg,#f6d385,#d29a48); color:#2a1a04; border-color:#7d5a1a; }
+  .diff-desc{ font-size:12px; opacity:.72; margin:0 auto 16px; min-height:16px; max-width:520px; line-height:1.4; }
+  .section-label{ font-size:11px; letter-spacing:2.5px; text-transform:uppercase; color:var(--teal); margin:6px 0 10px; opacity:.9; }
+  .options{ margin:4px 0 14px; border:1px solid var(--line); border-radius:10px; padding:8px 14px; background:rgba(8,12,28,.55); text-align:center; }
+  .options summary{ cursor:pointer; font-size:12px; letter-spacing:2px; text-transform:uppercase; color:var(--brass); padding:4px 0; user-select:none; }
+  .options[open] summary{ margin-bottom:10px; }
+  .ar-slider{ display:flex; align-items:center; gap:10px; justify-content:center; font-size:10.5px; opacity:.85; margin:2px 0 6px; }
+  .ar-slider input{ width:min(260px,50%); accent-color:var(--brass); }
+  .controls-grid{ display:grid; grid-template-columns:1fr 1fr; gap:18px; text-align:left; font-size:12px; margin-top:6px; border-top:1px solid var(--line); padding-top:16px; }
+  .controls-grid h3{ font-family:'Rajdhani',sans-serif; font-size:12px; letter-spacing:1.5px; text-transform:uppercase; color:var(--teal); margin:0 0 8px; }
+  .controls-grid .p2 h3{ color:var(--ember); }
+  .controls-grid .row{ display:flex; align-items:center; padding:2px 0; opacity:.9; gap:5px; }
+  .controls-grid .row .lbl{ flex:1; }
+  .key{ background:#141b33; border:1px solid #2c375c; border-radius:4px; padding:1px 7px; font-size:10.5px; color:var(--brass); white-space:nowrap; }
+  .hint{ font-size:11.5px; opacity:.6; margin-top:8px; line-height:1.5; }
+  .ability-glossary{ text-align:left; font-size:12.5px; line-height:1.5; margin-top:8px; }
+  .ability-glossary .ab-row{ padding:5px 0; opacity:.9; border-bottom:1px solid rgba(255,255,255,.06); }
+  .ability-glossary b{ color:var(--brass); }
+  .touch-note{ display:none; font-size:12px; color:var(--ember); margin:8px 0; }
+  .end-stats{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:0 auto 18px; max-width:460px; font-size:12.5px; }
+  .end-stats .col{ border:1px solid var(--line); border-radius:8px; padding:8px 10px; background:rgba(8,12,28,.5); text-align:left; }
+  .end-stats .col h4{ margin:0 0 4px; font-family:'Cinzel',Georgia,serif; font-weight:400; font-size:12px; letter-spacing:1px; }
+  .end-stats .col.p1 h4{ color:var(--teal); } .end-stats .col.p2 h4{ color:var(--ember); }
+  .end-stats .col div{ display:flex; justify-content:space-between; opacity:.85; }
+
+  /* ---------- HUD ---------- */
+  #hud{ position:absolute; inset:0; pointer-events:none; z-index:10; }
+  .hud-corner{ position:absolute; bottom:calc(10px*var(--s)); width:262px; display:flex; flex-direction:column; gap:4px;
+    background:linear-gradient(180deg,rgba(8,12,28,.35),rgba(8,12,28,.62)); border:1px solid rgba(170,190,255,.10); border-radius:10px; padding:8px 10px 9px; backdrop-filter:blur(2px); }
+  .hud-left{ left:calc(12px*var(--s)); transform-origin:bottom left; transform:scale(var(--s)); }
+  .hud-right{ right:calc(12px*var(--s)); align-items:flex-end; transform-origin:bottom right; transform:scale(var(--s)); }
+  .name-tag{ font-family:'Cinzel',Georgia,serif; font-size:13.5px; display:flex; align-items:center; gap:6px; letter-spacing:.6px; }
+  .hud-left .name-tag{ color:var(--teal); } .hud-right .name-tag{ color:var(--ember); flex-direction:row-reverse; }
+  .score{ color:#ffe08a; font-size:12px; letter-spacing:2px; }
+  .diff-tag{ font-family:'Rajdhani',sans-serif; font-size:10px; letter-spacing:1px; padding:1px 6px; border-radius:3px; background:rgba(0,0,0,.4); border:1px solid rgba(255,255,255,.2); text-transform:uppercase; color:var(--cream); }
+  .bar-row{ display:flex; align-items:center; gap:6px; width:100%; }
+  .hud-right .bar-row{ flex-direction:row-reverse; }
+  .bar-label{ font-size:9.5px; width:30px; opacity:.75; letter-spacing:1.2px; }
+  .hud-right .bar-label{ text-align:right; }
+  .bar-track{ flex:1; height:9px; background:rgba(0,0,0,.55); border:1px solid rgba(0,0,0,.6); border-radius:5px; overflow:hidden; position:relative; }
+  .bar-fill{ height:100%; transition:width .1s linear; border-radius:4px; }
+  .hud-right .bar-fill{ margin-left:auto; }
+  .fill-hp{ background:linear-gradient(90deg,#9c2f1f,#ff7a4d 70%,#ffc2a0); box-shadow:0 0 8px rgba(255,120,70,.5); }
+  .fill-fuel{ background:linear-gradient(90deg,#9a6f22,#f2c66d); box-shadow:0 0 8px rgba(242,198,109,.4); }
+  .fill-heat{ background:linear-gradient(90deg,#3c7a86,#ffb04d 70%,#ff4a2a); }
+  .fill-heat.hot{ background:repeating-linear-gradient(45deg,#ff4a2a 0 6px,#a5260f 6px 12px); }
+  .chip-row{ display:flex; gap:4px; margin-top:2px; flex-wrap:wrap; }
+  .hud-right .chip-row{ flex-direction:row-reverse; }
+  .wpn-chip{ font-size:10px; padding:2px 6px; border-radius:4px; letter-spacing:.4px; background:rgba(20,27,52,.8); border:1px solid #2c375c; opacity:.55; }
+  .wpn-chip.sel{ opacity:1; border-color:var(--brass); color:#fff3d6; background:rgba(70,52,16,.85); box-shadow:0 0 10px rgba(242,198,109,.25); }
+  .ab{ position:relative; font-size:9.5px; font-weight:700; letter-spacing:.6px; padding:3px 6px; border-radius:4px; overflow:hidden;
+    background:rgba(20,27,52,.8); border:1px solid #2c375c; color:#9aa5c8; --p:0; }
+  .ab::after{ content:''; position:absolute; inset:0; background:conic-gradient(rgba(0,0,0,.6) calc(var(--p)*360deg), transparent 0); }
+  .ab.ready{ color:#e9fffb; border-color:rgba(63,214,196,.7); box-shadow:0 0 8px rgba(63,214,196,.2); }
+  .hud-right .ab.ready{ border-color:rgba(255,122,77,.75); box-shadow:0 0 8px rgba(255,122,77,.2); color:#fff0e8; }
+  .ab.active{ background:rgba(63,214,196,.35); }
+  .pips{ display:flex; gap:3px; align-items:center; font-size:9.5px; opacity:.8; letter-spacing:1px; }
+  .hud-right .pips{ flex-direction:row-reverse; }
+  .pip{ width:8px; height:8px; border-radius:50%; background:#2a2118; border:1px solid #000; }
+  .pip.on{ background:radial-gradient(circle at 35% 35%,#6a5a48,#1a1410); box-shadow:0 0 0 1px #c9974a; }
+  #banner{ position:absolute; top:calc(16px*var(--s)); left:50%; transform:translateX(-50%); font-family:'Cinzel',Georgia,serif; font-size:calc(17px*var(--s));
+    color:var(--brass); text-shadow:0 0 18px rgba(242,170,90,.5), 0 2px 0 #000; opacity:0; transition:opacity .3s; letter-spacing:1.5px; white-space:nowrap; }
+  #weatherTag{ position:absolute; top:calc(44px*var(--s)); left:50%; transform:translateX(-50%); font-size:calc(10.5px*var(--s)); letter-spacing:3px; color:var(--moon); opacity:.55; text-transform:uppercase; white-space:nowrap; }
+  #weatherTag.storm{ color:#c9b6ff; opacity:.85; }
+  .wind-gauge{ position:absolute; left:calc(8px*var(--s)); font-size:calc(11px*var(--s)); color:var(--moon); letter-spacing:-1px; transform:translateY(-50%); opacity:.45; font-weight:700; text-shadow:0 0 6px rgba(150,170,255,.4); }
+  .ai-tag{ position:absolute; transform:translate(-50%,-100%); font-size:calc(10.5px*var(--s)); padding:2px 7px; border-radius:4px; white-space:nowrap;
+    background:rgba(6,9,20,.7); border:1px solid rgba(255,255,255,.15); color:#e9eefc; letter-spacing:.3px; display:none; }
+  .ai-tag b{ color:var(--brass); font-weight:600; margin-right:4px; }
+  .fabs{ position:absolute; top:calc(10px*var(--s)); right:calc(10px*var(--s)); z-index:15; display:flex; gap:calc(6px*var(--s)); }
+  .fab{ width:calc(34px*var(--s)); height:calc(34px*var(--s)); border-radius:8px; background:rgba(8,12,28,.55); border:1px solid rgba(170,190,255,.2);
+    color:var(--cream); font-size:calc(15px*var(--s)); display:flex; align-items:center; justify-content:center; cursor:pointer; user-select:none; transition:background .12s ease; padding:0; font-family:inherit; }
+  .fab:hover{ background:rgba(8,12,28,.9); }
+  .pause-hint{ position:absolute; top:calc(14px*var(--s)); left:calc(12px*var(--s)); z-index:15; font-size:calc(11px*var(--s)); opacity:.45; letter-spacing:.5px; pointer-events:none; }
+  #fps{ position:absolute; top:calc(30px*var(--s)); left:calc(12px*var(--s)); z-index:15; font-size:calc(10.5px*var(--s)); opacity:.6; pointer-events:none; display:none; letter-spacing:.5px; }
+  @media (max-width:640px){ .controls-grid{ grid-template-columns:1fr; } }
+
+  /* ---------- online ---------- */
+  .net-status{ min-height:20px; }
+  .net-status.err{ color:#ff9c7c; font-style:normal; }
+  .net-form{ display:flex; justify-content:center; margin:0 0 16px; }
+  .net-field{ display:flex; align-items:center; gap:10px; font-size:12px; letter-spacing:2px; text-transform:uppercase; color:var(--teal); }
+  .net-field input, .net-join input, .net-server{ font-family:'Rajdhani',sans-serif; font-weight:600; font-size:15px; color:var(--cream); background:rgba(8,12,28,.75);
+    border:1px solid var(--line); border-radius:7px; padding:8px 12px; outline:none; -webkit-user-select:text; user-select:text; }
+  .net-field input:focus, .net-join input:focus, .net-server:focus{ border-color:var(--brass); }
+  .net-join{ display:flex; gap:8px; justify-content:center; align-items:center; flex-wrap:wrap; }
+  #netCode{ width:150px; text-transform:uppercase; letter-spacing:4px; text-align:center; font-size:18px; }
+  #netLink{ width:min(340px,70vw); font-size:12px; }
+  .net-server{ width:min(420px,80vw); margin:4px auto 0; display:block; }
+  .net-wait-text{ font-size:15px; margin:4px 0 12px; color:var(--moon); animation:netPulse 1.6s ease-in-out infinite; }
+  @keyframes netPulse{ 50%{ opacity:.5; } }
+  .net-code{ font-family:'Cinzel',Georgia,serif; font-size:clamp(34px,7vw,54px); letter-spacing:10px; color:var(--brass); margin:0 0 12px; text-shadow:0 0 22px rgba(242,170,90,.35); -webkit-user-select:text; user-select:text; }
+  #netPing{ position:absolute; top:calc(62px*var(--s)); left:50%; transform:translateX(-50%); font-size:calc(10.5px*var(--s)); letter-spacing:1px; opacity:.7; white-space:nowrap; }
+  #netPing::before{ content:'●  '; }
+  #netPing.good::before{ color:#6fe3a5; } #netPing.ok::before{ color:#f2c66d; } #netPing.bad::before{ color:#ff7a4d; }
+  #netNotice{ position:absolute; top:42%; left:50%; transform:translate(-50%,-50%); padding:10px 18px; border-radius:10px; background:rgba(6,9,20,.78);
+    border:1px solid rgba(255,255,255,.15); font-size:calc(15px*var(--s)); letter-spacing:.5px; white-space:nowrap; z-index:12; }
+  body.touchmode #netPing{ top:calc(110px*var(--s) + 22px); }
+
+  .lan-radar{ position:relative; width:120px; height:120px; margin:10px auto 6px; }
+  .lan-radar span{ position:absolute; inset:0; border-radius:50%; border:2px solid rgba(63,214,196,.55); animation:lanPing 2.4s ease-out infinite; opacity:0; }
+  .lan-radar span:nth-child(2){ animation-delay:.8s; } .lan-radar span:nth-child(3){ animation-delay:1.6s; }
+  .lan-radar i{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-style:normal; font-size:30px; color:var(--brass); text-shadow:0 0 18px rgba(242,170,90,.5); }
+  @keyframes lanPing{ 0%{ transform:scale(.25); opacity:.9; } 100%{ transform:scale(1); opacity:0; } }
+  #lanCodeIn{ width:110px; text-align:center; letter-spacing:6px; font-size:18px; }
+  .lan-code{ color:var(--brass); letter-spacing:3px; font-size:15px; -webkit-user-select:text; user-select:text; }
+
+  /* ---------- touch ---------- */
+  html,body{ touch-action:manipulation; -webkit-text-size-adjust:100%; }
+  #wrap, .tc, .tc *{ touch-action:none; }
+  html,body{ -webkit-tap-highlight-color:transparent; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; overscroll-behavior:none; }
+  #wrap canvas{ touch-action:none; }
+  .overlay{ touch-action:pan-y; -webkit-overflow-scrolling:touch; overscroll-behavior:contain; }
+  #safeProbe{ position:fixed; left:0; top:0; width:0; height:0; visibility:hidden; pointer-events:none;
+    padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
+  .tc{ position:fixed; inset:0; z-index:20; pointer-events:none; display:none; touch-action:none; }
+  .tc.show{ display:block; }
+  .tc-zone{ position:absolute; pointer-events:auto; touch-action:none; }
+  .tc-base{ position:absolute; border-radius:50%; transform:translate(-50%,-50%); pointer-events:none; opacity:.38; transition:opacity .15s;
+    background:radial-gradient(circle, rgba(20,28,56,.35) 0 55%, rgba(20,28,56,.55) 56% 100%);
+    border:1.5px solid rgba(190,205,255,.35); box-shadow:inset 0 0 18px rgba(0,0,0,.45); }
+  .tc-base::before, .tc-base::after{ content:''; position:absolute; left:50%; transform:translateX(-50%); font-size:11px; color:rgba(242,198,109,.75); font-family:'Rajdhani',sans-serif; font-weight:700; letter-spacing:1px; }
+  .tc-base::before{ content:'BURN ▲'; top:6%; }
+  .tc-base::after{ content:'▼ VENT'; bottom:6%; color:rgba(190,205,255,.6); }
+  .tc-base.on{ opacity:.95; }
+  .tc-knob{ position:absolute; left:50%; top:50%; margin:0; border-radius:50%; translate:-50% -50%;
+    background:radial-gradient(circle at 38% 32%, #fff3cf, #f2c66d 45%, #a8742c 100%); box-shadow:0 4px 14px rgba(0,0,0,.5), 0 0 18px rgba(242,198,109,.35); }
+  .tc-base.p2 .tc-knob{ background:radial-gradient(circle at 38% 32%, #ffe1d2, #ff7a4d 45%, #a4361b 100%); }
+  .tc-btn{ position:absolute; border-radius:50%; pointer-events:auto; touch-action:none; overflow:hidden; --p:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; line-height:1;
+    font-family:'Rajdhani',sans-serif; font-weight:700; letter-spacing:.06em; color:#cfd6ee;
+    background:radial-gradient(circle at 50% 30%, rgba(46,58,98,.55), rgba(10,14,30,.5));
+    border:1.5px solid rgba(170,190,255,.25); box-shadow:0 4px 14px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.08);
+    transition:transform .06s ease, border-color .15s, box-shadow .15s; }
+  .tc-btn::after{ content:''; position:absolute; inset:0; border-radius:50%; background:conic-gradient(rgba(0,0,0,.62) calc(var(--p)*360deg), transparent 0); pointer-events:none; }
+  .tc-btn .lb{ position:relative; z-index:1; }
+  .tc-btn .ct{ position:relative; z-index:1; font-size:.85em; margin-top:.2em; color:var(--brass); min-height:1em; }
+  .tc-btn.ready{ color:#f4f7ff; border-color:rgba(63,214,196,.75); box-shadow:0 4px 14px rgba(0,0,0,.45), 0 0 12px rgba(63,214,196,.25); }
+  .tc-btn.p2.ready{ border-color:rgba(255,122,77,.8); box-shadow:0 4px 14px rgba(0,0,0,.45), 0 0 12px rgba(255,122,77,.25); }
+  .tc-btn.active{ background:radial-gradient(circle at 50% 30%, rgba(63,214,196,.55), rgba(10,40,44,.85)); }
+  .tc-btn.warn .lb{ color:#ff9c7c; }
+  .tc-btn.down{ transform:scale(.9); filter:brightness(1.35); }
+  .tc-btn.big{ color:#2a1206; background:radial-gradient(circle at 45% 30%, #ffd7a1, #ff8a4a 48%, #b4401c 100%); border-color:rgba(255,220,170,.7); }
+  .tc-btn.big::after{ background:conic-gradient(from 0deg, rgba(255,250,225,.95) calc(var(--p)*360deg), rgba(0,0,0,.18) 0);
+    -webkit-mask:radial-gradient(circle, transparent 60%, #000 62%, #000 72%, transparent 74%); mask:radial-gradient(circle, transparent 60%, #000 62%, #000 72%, transparent 74%); }
+  .tc-btn.big.warn::after{ background:conic-gradient(#ff4a2a calc(var(--p)*360deg), rgba(0,0,0,.2) 0); }
+  .tc-btn.big.warn{ filter:saturate(.4) brightness(.8); }
+  .tc-btn.big.warn .lb{ color:#2a1206; }
+  .tc-btn.big.ready{ border-color:rgba(255,230,180,.9); box-shadow:0 6px 18px rgba(0,0,0,.5), 0 0 22px rgba(255,140,70,.35); }
+  .tc.duo .tc-btn.p1.big{ background:radial-gradient(circle at 45% 30%, #c4fff4, #3fd6c4 48%, #126a60 100%); color:#03231f; border-color:rgba(190,255,245,.7); }
+  .tc.duo .tc-btn.p1.big.warn .lb{ color:#03231f; }
+  .tc:not(.duo) .p2{ display:none; }
+
+  .touch-help{ display:none; text-align:left; font-size:13px; line-height:1.55; margin:6px auto 4px; max-width:560px; border-top:1px solid var(--line); padding-top:12px; }
+  .touch-help b{ color:var(--brass); }
+  body.touchmode .controls-fill, body.touchmode .kbd-only{ display:none; }
+  body.touchmode .touch-help{ display:block; }
+  body.touchmode .pause-hint{ display:none !important; }
+  body.touchmode .fabs{ right:auto; left:50%; transform:translateX(-50%); top:calc(8px + env(safe-area-inset-top)); }
+  body.touchmode .fab{ width:40px; height:40px; font-size:17px; }
+  body.touchmode #banner{ top:calc(56px*var(--s) + 22px); }
+  body.touchmode #weatherTag{ top:calc(84px*var(--s) + 22px); }
+  body.touchmode .hud-corner{ bottom:auto; top:calc(8px*var(--s)); width:230px; padding:6px 9px 7px; }
+  body.touchmode .hud-left{ left:calc(10px*var(--s) + env(safe-area-inset-left)); transform-origin:top left; }
+  body.touchmode .hud-right{ right:calc(10px*var(--s) + env(safe-area-inset-right)); transform-origin:top right; }
+  body.touchmode .hud-corner .wpns, body.touchmode .hud-corner .abs, body.touchmode .hud-corner .pips{ display:none; }
+  body.touchmode #fps{ top:auto; bottom:4px; left:50%; transform:translateX(-50%); }
+  body.touchmode #arFab{ display:none; }
+
+  /* ================= MAIN MENU (Loonfire) ================= */
+  .overlay.menu{ background:none; backdrop-filter:none; text-align:left; overflow:hidden; }
+  .menu-shade{ position:absolute; inset:0; pointer-events:none; background:linear-gradient(90deg, rgba(4,6,14,.9) 0%, rgba(4,6,14,.62) 34%, rgba(4,6,14,0) 52%), linear-gradient(0deg, rgba(4,6,14,.55) 0%, rgba(4,6,14,0) 22%); }
+  .menu-col{ position:absolute; left:calc(72px*var(--s)); top:calc(52px*var(--s)); width:440px; display:flex; flex-direction:column; gap:18px; transform-origin:top left; transform:scale(var(--s)); }
+  .logo h1{ font-family:'Cinzel',Georgia,serif; font-weight:900; font-size:64px; line-height:1; letter-spacing:.04em; color:var(--brass); text-shadow:0 2px 0 rgba(0,0,0,.55), 0 0 28px rgba(242,170,90,.28); }
+  .logo-sub{ display:flex; align-items:center; gap:12px; margin-top:6px; font-size:15px; font-weight:600; letter-spacing:.42em; color:var(--moon); }
+  .logo-sub span{ width:34px; height:1px; background:var(--dim); }
+  button.play{ all:unset; cursor:pointer; box-sizing:border-box; width:440px; min-height:76px; padding:10px 22px; border-radius:14px; display:flex; align-items:center; gap:16px;
+    background:linear-gradient(180deg,#f8d993,#d8a04e); color:#241604; box-shadow:0 10px 28px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.5); transition:transform .15s ease, box-shadow .2s ease; }
+  button.play:hover{ transform:translateY(-2px); box-shadow:0 14px 34px rgba(0,0,0,.5), 0 0 40px rgba(242,170,90,.35); }
+  button.play:focus-visible{ outline:2px solid var(--teal); outline-offset:3px; }
+  button.play svg{ width:30px; height:30px; fill:none; stroke:#241604; stroke-width:2.2; stroke-linejoin:round; flex:none; }
+  .play-txt{ display:flex; flex-direction:column; gap:3px; flex:1; }
+  .play-label{ font-size:26px; font-weight:700; line-height:1; letter-spacing:.02em; }
+  .play-sub{ font-size:14px; font-weight:600; opacity:.8; display:flex; align-items:center; gap:7px; }
+  .play-sub i.live{ width:8px; height:8px; border-radius:50%; background:#2f9e64; animation:livePulse 1.8s ease-out infinite; }
+  @keyframes livePulse{ 0%{ box-shadow:0 0 0 0 rgba(47,158,100,.6); } 100%{ box-shadow:0 0 0 9px rgba(47,158,100,0); } }
+  .play-key b{ font-size:13px; font-weight:700; letter-spacing:.12em; opacity:.7; }
+  .play-key .pb, .g{ display:none; }
+  body.padmode .play-key .kb{ display:none; } body.padmode .play-key .pb{ display:inline-flex; }
+  .play-key .pb{ width:26px; height:26px; border-radius:50%; background:#241604; color:#f8d993; align-items:center; justify-content:center; opacity:1; letter-spacing:0; }
+  .mode-list{ display:flex; flex-direction:column; gap:6px; }
+  button.mode{ all:unset; cursor:pointer; box-sizing:border-box; width:440px; min-height:58px; padding:6px 16px; border-radius:12px; display:flex; align-items:center; gap:14px;
+    background:rgba(10,14,30,.5); box-shadow:inset 0 0 0 1px rgba(170,190,255,.12); transition:background .18s ease, transform .18s ease, box-shadow .18s ease; }
+  button.mode:hover{ transform:translateX(6px); background:rgba(20,26,52,.6); }
+  button.mode:focus-visible{ outline:2px solid var(--teal); outline-offset:3px; }
+  button.mode[aria-pressed="true"]{ background:rgba(242,198,109,.14); box-shadow:inset 0 0 0 1.5px rgba(242,198,109,.75), 0 0 24px rgba(242,170,90,.16); }
+  button.mode .mi{ width:38px; height:38px; border-radius:10px; flex:none; display:flex; align-items:center; justify-content:center; background:rgba(170,190,255,.1); color:#cfd6ee; }
+  button.mode[aria-pressed="true"] .mi{ background:var(--brass); color:#241604; }
+  button.mode .mi svg{ width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+  button.mode .mt{ display:flex; flex-direction:column; gap:1px; flex:1; }
+  button.mode .mt b{ font-size:19px; font-weight:700; color:#e6e9f5; letter-spacing:.01em; }
+  button.mode[aria-pressed="true"] .mt b{ color:#fff3d6; }
+  button.mode .mt small{ font-size:13.5px; font-weight:500; color:#a9b2d0; }
+  button.mode .chev{ width:18px; height:18px; fill:none; stroke:#5d6788; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; flex:none; }
+  button.mode[aria-pressed="true"] .chev{ stroke:var(--brass); }
+  .diff-inline{ display:none; flex-direction:column; gap:6px; padding:10px 14px 12px; border-radius:12px; background:rgba(10,14,30,.55); box-shadow:inset 0 0 0 1px rgba(170,190,255,.1); }
+  .diff-inline.show{ display:flex; }
+  button.mode .short{ display:none; }
+  .mini-label{ font-size:11.5px; font-weight:700; letter-spacing:.22em; color:var(--dim); text-transform:uppercase; }
+  .seg{ display:flex; gap:4px; padding:4px; border-radius:10px; background:rgba(170,190,255,.08); flex-wrap:wrap; }
+  .seg button{ all:unset; cursor:pointer; padding:6px 12px; border-radius:7px; font-size:15px; font-weight:700; color:#cfd6ee; transition:background .15s; }
+  .seg button:hover{ background:rgba(170,190,255,.1); }
+  .seg button[aria-pressed="true"]{ background:var(--brass); color:#241604; }
+  .seg button:focus-visible{ outline:2px solid var(--teal); outline-offset:2px; }
+  .diff-inline .diff-desc{ margin:2px 0 0; text-align:left; max-width:none; font-size:13px; }
+  .menu-icons{ display:flex; gap:10px; }
+  button.ico{ all:unset; cursor:pointer; width:46px; height:46px; border-radius:12px; display:flex; align-items:center; justify-content:center; background:rgba(170,190,255,.08); box-shadow:inset 0 0 0 1px rgba(170,190,255,.16); transition:background .15s; }
+  button.ico:hover{ background:rgba(170,190,255,.16); }
+  button.ico:focus-visible{ outline:2px solid var(--teal); outline-offset:3px; }
+  button.ico svg{ width:21px; height:21px; fill:none; stroke:#cfd6ee; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+  button.ico.off .wave{ opacity:0; }
+  .tonight{ position:absolute; right:calc(36px*var(--s)); bottom:calc(30px*var(--s)); display:flex; align-items:center; gap:12px; padding:10px 16px 10px 12px; border-radius:14px; background:rgba(6,9,20,.62); box-shadow:inset 0 0 0 1px rgba(170,190,255,.14); transform-origin:bottom right; transform:scale(var(--s)); }
+  .tonight svg{ width:30px; height:30px; }
+  .tonight span{ display:flex; flex-direction:column; gap:1px; }
+  .tonight small{ font-size:12px; font-weight:600; letter-spacing:.2em; color:var(--dim); }
+  .tonight b{ font-size:16px; font-weight:700; color:var(--cream); }
+  .prompt-bar{ position:absolute; left:50%; bottom:calc(30px*var(--s)); transform:translateX(-50%) scale(var(--s)); transform-origin:bottom center; display:none; align-items:center; gap:16px; padding:9px 16px; border-radius:12px; background:rgba(6,9,20,.62); box-shadow:inset 0 0 0 1px rgba(170,190,255,.14); font-size:15px; font-weight:600; color:#cfd6ee; white-space:nowrap; }
+  body.padmode .prompt-bar{ display:flex; }
+  .prompt-bar span{ display:flex; align-items:center; gap:6px; }
+  .prompt-bar .pad-on{ color:#6fe3a5; }
+  .g{ display:inline-flex; height:22px; min-width:22px; padding:0 6px; box-sizing:border-box; border-radius:11px; align-items:center; justify-content:center; font-size:12px; font-weight:700; font-style:normal; }
+  .prompt-bar .g, body.padmode .g{ display:inline-flex; }
+  .g.a{ background:var(--brass); color:#241604; } .g.b{ background:var(--teal); color:#04201c; } .g.r{ background:rgba(170,190,255,.18); color:#e6e9f5; border-radius:6px; }
+  #wrap .overlay.menu .touch-note{ text-align:left; margin:0; }
+
+  /* ================= SETTINGS ================= */
+  .overlay.settings{ background:rgba(3,5,12,.55); backdrop-filter:blur(6px); align-items:center; justify-content:center; }
+  .set-panel{ position:relative; width:1120px; height:616px; border-radius:20px; display:flex; overflow:hidden; text-align:left; background:rgba(7,10,22,.9);
+    box-shadow:0 30px 80px rgba(0,0,0,.6), inset 0 0 0 1px rgba(170,190,255,.14); transform:scale(min(var(--s), calc(var(--s)*1))); margin:auto; flex:none; }
+  .set-tabs{ width:250px; box-sizing:border-box; padding:28px 16px; background:rgba(170,190,255,.04); box-shadow:inset -1px 0 0 rgba(170,190,255,.1); display:flex; flex-direction:column; gap:4px; flex:none; }
+  .set-tabs h2{ margin:0 0 18px 12px; font-size:28px; font-weight:900; color:var(--brass); letter-spacing:.03em; }
+  .set-tabs button{ all:unset; cursor:pointer; box-sizing:border-box; height:48px; padding:0 14px; border-radius:10px; display:flex; align-items:center; gap:12px; font-size:19px; font-weight:700; color:#cfd6ee; }
+  .set-tabs button:hover{ background:rgba(170,190,255,.08); }
+  .set-tabs button:focus-visible{ outline:2px solid var(--teal); outline-offset:2px; }
+  .set-tabs button i{ width:8px; height:8px; border-radius:50%; background:#4b5574; }
+  .set-tabs button[aria-selected="true"]{ background:rgba(242,198,109,.14); box-shadow:inset 0 0 0 1.5px rgba(242,198,109,.6); color:#fff3d6; }
+  .set-tabs button[aria-selected="true"] i{ background:var(--brass); }
+  .set-tabs .new{ margin-left:auto; font-size:11px; font-weight:700; letter-spacing:.12em; padding:2px 6px; border-radius:5px; background:rgba(63,214,196,.16); color:#6fe8d8; }
+  .set-body{ flex:1; box-sizing:border-box; padding:30px 36px; overflow-y:auto; display:flex; flex-direction:column; gap:6px; }
+  .set-head{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:10px; padding-right:40px; }
+  .set-head span{ font-size:26px; font-weight:700; color:var(--cream); }
+  .set-head small{ font-size:15px; font-weight:500; color:#a9b2d0; }
+  .set-row{ box-sizing:border-box; min-height:58px; padding:8px 16px; border-radius:12px; display:flex; align-items:center; gap:18px; background:rgba(170,190,255,.04); box-shadow:inset 0 0 0 1px rgba(170,190,255,.08); }
+  .set-row.exp{ background:rgba(255,122,77,.06); box-shadow:inset 0 0 0 1px rgba(255,122,77,.3); }
+  .set-row.dis{ opacity:.45; }
+  .set-row .sl{ display:flex; flex-direction:column; gap:1px; flex:1; min-width:0; }
+  .set-row .sl b{ font-size:18px; font-weight:700; color:#eef0f8; display:flex; align-items:center; gap:10px; }
+  .set-row .sl small{ font-size:14px; font-weight:500; color:#a9b2d0; }
+  .tag-exp{ font-size:11px; font-weight:700; letter-spacing:.14em; padding:3px 7px; border-radius:5px; background:rgba(255,122,77,.16); color:#ff9a74; box-shadow:inset 0 0 0 1px rgba(255,122,77,.4); }
+  button.tg{ all:unset; cursor:pointer; width:52px; height:30px; border-radius:15px; position:relative; background:rgba(170,190,255,.22); flex:none; transition:background .15s; }
+  button.tg::after{ content:''; position:absolute; left:3px; top:3px; width:24px; height:24px; border-radius:50%; background:#fff; box-shadow:0 2px 6px rgba(0,0,0,.4); transition:transform .18s ease; }
+  button.tg[aria-checked="true"]{ background:#d8a04e; } button.tg[aria-checked="true"]::after{ transform:translateX(22px); }
+  button.tg:focus-visible{ outline:2px solid var(--teal); outline-offset:3px; }
+  .set-row input[type=range]{ width:170px; accent-color:var(--brass); }
+  .set-row .val{ width:48px; text-align:right; font-size:16px; font-weight:700; color:var(--cream); font-variant-numeric:tabular-nums; }
+  .set-row .info{ display:flex; align-items:center; gap:8px; font-size:16px; font-weight:700; }
+  .set-row .info i{ width:8px; height:8px; border-radius:50%; background:currentColor; }
+  .set-row .bind{ all:unset; cursor:pointer; min-width:84px; text-align:center; padding:6px 12px; border-radius:8px; background:rgba(170,190,255,.1); box-shadow:inset 0 0 0 1px rgba(170,190,255,.2); font-size:15px; font-weight:700; color:#e6e9f5; }
+  .set-row .bind.wait{ background:rgba(242,198,109,.2); color:#fff3d6; }
+  .set-row .bind:focus-visible{ outline:2px solid var(--teal); outline-offset:2px; }
+  .set-sec{ font-size:12px; font-weight:700; letter-spacing:.2em; color:var(--teal); text-transform:uppercase; margin:12px 0 2px 4px; }
+  .set-body .diff-row{ justify-content:flex-start; margin:0; }
+  .set-body .ar-slider{ justify-content:flex-start; }
+  .set-body .diff-desc{ text-align:left; margin:4px 0 0; }
+  button.set-close{ all:unset; cursor:pointer; position:absolute; right:20px; top:20px; width:40px; height:40px; border-radius:12px; background:rgba(170,190,255,.1); display:flex; align-items:center; justify-content:center; box-shadow:inset 0 0 0 1px rgba(170,190,255,.2); }
+  button.set-close svg{ width:18px; height:18px; fill:none; stroke:#e6e9f5; stroke-width:2.2; stroke-linecap:round; }
+  button.set-close:focus-visible{ outline:2px solid var(--teal); outline-offset:3px; }
+  .pad-map{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:4px 22px; text-align:left; font-size:13px; margin:10px auto 0; max-width:560px; }
+  .pad-map div{ display:flex; justify-content:space-between; gap:8px; border-bottom:1px solid rgba(255,255,255,.06); padding:3px 0; }
+  .pad-map b{ color:var(--brass); font-weight:700; }
+
+  /* ================= HUD: wind ribbon & alerts ================= */
+  .wind-ribbon{ position:absolute; left:calc(10px*var(--s)); top:0; bottom:0; width:0; pointer-events:none; }
+  .wr-cell{ position:absolute; left:0; transform:translateY(-50%) scale(var(--s)); transform-origin:left center; display:flex; align-items:center; gap:7px; padding:5px 9px; border-radius:9px;
+    background:rgba(6,9,20,.5); box-shadow:inset 0 0 0 1px rgba(170,190,255,.12); color:#cfd6ee; font-size:13px; font-weight:700; white-space:nowrap; transition:background .2s, box-shadow .2s; }
+  .wr-cell svg{ width:22px; height:14px; fill:none; stroke:currentColor; stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round; transition:transform .4s ease; }
+  .wr-cell.you{ background:rgba(242,198,109,.18); box-shadow:inset 0 0 0 1.5px rgba(242,198,109,.7); color:#fff3d6; }
+  .wr-cell.gust{ box-shadow:inset 0 0 0 1.5px rgba(255,122,77,.8); }
+  .wr-cell small{ font-size:10.5px; font-weight:600; opacity:.75; letter-spacing:.06em; }
+  body.no-windhud .wind-ribbon{ display:none; }
+  body:not(.in-match) .fabs{ display:none; }
+  body:not(.in-match) .hud-corner, body:not(.in-match) .wind-ribbon, body:not(.in-match) #weatherTag, body:not(.in-match) .alerts{ display:none; }
+  .alerts{ position:absolute; left:50%; top:calc(66px*var(--s)); transform:translateX(-50%) scale(var(--s)); transform-origin:top center; display:flex; gap:8px; pointer-events:none; }
+  .alert{ display:none; align-items:center; gap:8px; padding:6px 13px; border-radius:11px; font-size:14px; font-weight:700; white-space:nowrap; background:rgba(6,9,20,.72); box-shadow:inset 0 0 0 1px rgba(170,190,255,.16); color:var(--cream); }
+  .alert.on{ display:flex; }
+  .alert.warn{ background:rgba(60,26,14,.78); box-shadow:inset 0 0 0 1px rgba(255,122,77,.5); color:#ffd2c0; animation:alertPulse 1.2s ease-in-out infinite; }
+  .alert.good{ box-shadow:inset 0 0 0 1px rgba(111,227,165,.5); color:#c8f5dd; }
+  @keyframes alertPulse{ 50%{ opacity:.6; } }
+  body.touchmode .alerts{ top:calc(112px*var(--s) + 22px); }
+
+
+  /* ================= ONLINE (matchmaking) ================= */
+  .overlay.online{ background:rgba(3,5,12,.6); backdrop-filter:blur(5px); }
+  .ol-wrap{ margin:auto; width:1160px; padding:24px 0; transform:scale(var(--s)); transform-origin:center; text-align:left; }
+  .ol-top{ display:flex; align-items:center; gap:16px; margin-bottom:16px; }
+  .ol-title{ font-family:'Cinzel',Georgia,serif; font-size:30px; font-weight:900; color:var(--brass); }
+  .ol-chip{ margin-left:auto; display:flex; align-items:center; gap:8px; padding:8px 14px; border-radius:10px; background:rgba(6,9,20,.7); font-size:15px; font-weight:600; color:#cfd6ee; }
+  .ol-chip i{ width:8px; height:8px; border-radius:50%; background:#6fe3a5; }
+  .ol-cols{ display:grid; grid-template-columns:290px 1fr 300px; gap:20px; align-items:start; }
+  .ol-card{ box-sizing:border-box; padding:22px; border-radius:18px; background:rgba(7,10,22,.88); box-shadow:inset 0 0 0 1px rgba(170,190,255,.14); display:flex; flex-direction:column; gap:12px; }
+  .ol-main{ min-height:500px; align-items:center; text-align:center; justify-content:flex-start; box-shadow:0 30px 80px rgba(0,0,0,.5), inset 0 0 0 1px rgba(170,190,255,.14); }
+  .ol-k{ font-size:13px; font-weight:700; letter-spacing:.2em; color:var(--dim); }
+  .ol-k.ok{ color:#6fe3a5; letter-spacing:.24em; margin-top:10px; }
+  #netName{ font-family:'Rajdhani',sans-serif; font-size:26px; font-weight:700; color:var(--cream); background:transparent; border:none; border-bottom:1px dashed rgba(170,190,255,.3); padding:2px 0; outline:none; width:100%; -webkit-user-select:text; user-select:text; }
+  #netName:focus{ border-bottom-color:var(--brass); }
+  .ol-rank{ display:flex; align-items:center; gap:12px; }
+  .ol-rank svg{ width:40px; height:44px; } .ol-rank svg path{ fill:var(--brass); } .ol-rank svg path.st{ fill:#5a3d10; }
+  .ol-rank span{ display:flex; flex-direction:column; } .ol-rank b{ font-size:22px; color:#fff3d6; } .ol-rank small{ font-size:14px; font-weight:600; color:#f2d79a; }
+  .ol-bar{ height:6px; border-radius:3px; background:rgba(170,190,255,.14); overflow:hidden; } .ol-bar i{ display:block; height:6px; width:0; border-radius:3px; background:linear-gradient(90deg,#d8a04e,#f8d993); transition:width .4s; }
+  .ol-note{ font-size:14px; color:#a9b2d0; }
+  .ol-wl{ display:flex; justify-content:space-between; font-size:15px; font-weight:600; color:#cfd6ee; }
+  .ol-ready{ font-size:24px; font-weight:700; color:var(--cream); margin-top:40px; }
+  .ol-sub{ font-size:15px; color:#a9b2d0; line-height:1.4; max-width:420px; margin:0 auto; text-align:center; }
+  button.play.ol-go{ width:300px; min-height:70px; margin:30px auto 0; justify-content:center; }
+  #netChoose, #netWait, #netFound, #netRoomBox{ width:100%; flex-direction:column; align-items:center; gap:14px; }
+  #netChoose[style*="block"], #netWait[style*="block"], #netFound[style*="block"], #netRoomBox[style*="block"]{ display:flex !important; }
+  .ol-radar{ position:relative; width:170px; height:170px; border-radius:50%; background:rgba(63,214,196,.05); box-shadow:inset 0 0 0 1.2px rgba(63,214,196,.35); }
+  .ol-radar span{ position:absolute; inset:0; border-radius:50%; border:2px solid rgba(63,214,196,.5); animation:lanPing 2.4s ease-out infinite; opacity:0; }
+  .ol-radar span:nth-child(2){ animation-delay:.8s; } .ol-radar span:nth-child(3){ animation-delay:1.6s; }
+  .ol-radar b{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:28px; font-weight:700; color:var(--cream); font-variant-numeric:tabular-nums; }
+  .ol-steps{ display:flex; flex-direction:column; gap:6px; width:100%; max-width:430px; }
+  .ol-step{ display:flex; align-items:center; gap:12px; min-height:36px; padding:0 12px; border-radius:9px; background:rgba(170,190,255,.04); text-align:left; }
+  .ol-step i{ width:20px; height:20px; border-radius:50%; flex:none; display:flex; align-items:center; justify-content:center; background:rgba(170,190,255,.18); color:#04201c; font-size:12px; font-style:normal; font-weight:700; }
+  .ol-step em{ width:64px; font-style:normal; font-size:14px; font-weight:700; color:#8d97b8; flex:none; }
+  .ol-step span{ font-size:15px; font-weight:600; color:#8d97b8; }
+  .ol-step.done i{ background:#6fe3a5; } .ol-step.done span{ color:#a9b2d0; }
+  .ol-step.cur{ background:rgba(63,214,196,.12); } .ol-step.cur i{ background:var(--teal); } .ol-step.cur span{ color:#e8fffb; }
+  .ol-vs{ display:flex; align-items:center; gap:18px; }
+  .ol-p{ width:160px; padding:14px; border-radius:14px; display:flex; flex-direction:column; align-items:center; gap:4px; }
+  .ol-p b{ font-size:20px; color:var(--cream); } .ol-p small{ font-size:15px; font-weight:600; }
+  .ol-p.a{ background:rgba(26,161,144,.14); box-shadow:inset 0 0 0 1px rgba(26,161,144,.5); } .ol-p.a small{ color:#9fe9dd; }
+  .ol-p.b{ background:rgba(212,81,47,.16); box-shadow:inset 0 0 0 1px rgba(212,81,47,.55); } .ol-p.b small{ color:#ffb9a3; }
+  .ol-vs > span{ font-family:'Cinzel',Georgia,serif; font-size:26px; font-weight:900; color:var(--brass); }
+  .ol-count{ position:relative; width:110px; height:110px; }
+  .ol-count svg{ width:110px; height:110px; transform:rotate(-90deg); } .ol-count circle{ fill:none; stroke:rgba(170,190,255,.15); stroke-width:6; }
+  .ol-count circle.arc{ stroke:var(--brass); stroke-linecap:round; stroke-dasharray:327; stroke-dashoffset:0; transition:stroke-dashoffset 1s linear; }
+  .ol-count b{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:34px; color:var(--cream); }
+  .ol-friend .seg{ align-self:flex-start; }
+  .ol-friend .net-join{ justify-content:flex-start; } .ol-friend #netCode{ width:130px; }
+  .ol-recent div.m{ display:flex; justify-content:space-between; font-size:15px; font-weight:600; padding:2px 0; }
+  .ol-recent .w{ color:#6fe3a5; } .ol-recent .l{ color:#ff9a74; } .ol-recent .d{ color:#cfd6ee; }
+  .ol-friend .options{ margin:6px 0 0; text-align:left; } .ol-friend .net-server{ width:100%; }
+  .ol-main .net-status{ margin:auto 0 0; font-size:14px; }
+  .rating-line{ font-size:15px; font-weight:700; color:#f2d79a; margin-top:4px; }
+  .rating-line.up{ color:#6fe3a5; } .rating-line.down{ color:#ff9a74; }
+  @media (max-height:520px){
+    .ol-wrap{ width:100vw; padding:10px 14px; transform:none; }
+    .ol-cols{ grid-template-columns:1fr 1.5fr; } .ol-friend{ grid-column:1/-1; }
+    .ol-main{ min-height:0; padding:14px; } .ol-ready{ margin-top:6px; } button.play.ol-go{ margin-top:10px; }
+    .ol-radar{ width:110px; height:110px; } .ol-top{ margin-bottom:8px; } .ol-title{ font-size:22px; }
+  }
+  /* ================= PHONE (landscape, short screens) ================= */
+  @media (max-height:520px){
+    .menu-col{ left:calc(24px + env(safe-area-inset-left)); top:16px; width:auto; right:calc(24px + env(safe-area-inset-right)); bottom:16px; transform:none; gap:0; display:block; }
+    .logo h1{ font-size:34px; } .logo-sub{ font-size:11px; letter-spacing:.38em; margin-top:2px; } .logo-sub span{ width:22px; }
+    .mode-list{ position:absolute; left:0; bottom:0; flex-direction:row; gap:8px; }
+    button.mode{ width:92px; min-height:104px; padding:10px 9px; flex-direction:column; align-items:flex-start; justify-content:space-between; gap:6px; background:rgba(8,11,24,.8); }
+    button.mode:hover{ transform:none; }
+    button.mode .mt small, button.mode .chev, button.mode .long{ display:none; }
+    button.mode .short{ display:inline; }
+    button.mode .mt b{ font-size:15px; line-height:1.05; }
+    button.mode .mi{ width:34px; height:34px; }
+    button.play{ position:absolute; right:0; bottom:0; width:min(250px, 30vw); min-height:104px; padding:12px 16px; flex-direction:column; align-items:flex-start; justify-content:space-between; gap:6px; }
+    button.play svg{ width:24px; height:24px; position:absolute; right:14px; top:14px; }
+    .play-label{ font-size:23px; } .play-key{ display:none; }
+    .diff-inline{ position:absolute; left:0; bottom:114px; flex-direction:row; flex-wrap:wrap; align-items:center; gap:6px; padding:6px 8px; max-width:calc(100% - 270px); }
+    .diff-inline .mini-label, .diff-inline .diff-desc{ display:none; }
+    .seg button{ padding:5px 9px; font-size:13.5px; }
+    .menu-icons{ position:absolute; right:0; top:0; gap:8px; }
+    button.ico{ width:42px; height:42px; }
+    .tonight{ display:none; }
+    .prompt-bar{ display:none !important; }
+    .set-panel{ width:100vw; height:100vh; border-radius:0; transform:none; }
+    .set-tabs{ width:170px; padding:14px 8px; } .set-tabs h2{ font-size:20px; margin:0 0 10px 8px; } .set-tabs button{ height:40px; font-size:16px; }
+    .set-body{ padding:16px 18px; } .set-head span{ font-size:20px; }
+    .set-row{ min-height:50px; padding:6px 12px; } .set-row .sl b{ font-size:15px; } .set-row .sl small{ font-size:12px; }
+    .set-row input[type=range]{ width:110px; }
+  }
+  @media (max-height:520px) and (max-width:700px){ button.mode{ width:76px; } .mode-list{ gap:6px; } }
+  @media (orientation:portrait){
+    body.touchmode .stage{ align-items:flex-start; padding-top:env(safe-area-inset-top); }
+    body.touchmode .hud-corner{ width:196px; }
+    body.touchmode #fsFab{ display:none; }
+  }
+</style>
+</head>
+<body>
+<noscript>
+  <div style="padding:24px;font-family:sans-serif;color:#f1ead9;background:#05070f;max-width:640px;margin:auto;">
+    <h1>Loonfire — Balloon Wars: hot-air balloon duels beneath the moon</h1>
+    <p>Loonfire is a free action game you play right in your browser. Pilot an armed hot-air balloon: climb and dive to line up your guns, ride the wind, and use rockets, flak, bombs, a harpoon, shields and boosts to bring down your rival.</p>
+    <p>Play against the Wind Pilot AI, with a friend on the same screen, online with anyone, or on the same Wi-Fi or phone hotspot. Works on phones, tablets and computers — please enable JavaScript to play.</p>
+  </div>
+</noscript>
+<div id="safeProbe"></div>
+<div class="stage">
+<div id="wrap">
+  <canvas id="gl"></canvas>
+  <canvas id="fallback" style="display:none"></canvas>
+  <div id="hud">
+    <div id="banner"></div>
+    <div id="weatherTag"></div>
+    <div id="windGauge" class="wind-ribbon"></div>
+    <div class="alerts"><div class="alert warn" id="alGust"></div><div class="alert" id="alFog">Hidden in fog</div><div class="alert good" id="alFuel">Refuelling from the lamp</div></div>
+    <div id="netPing" style="display:none;"></div>
+    <div id="netNotice" style="display:none;"></div>
+    <div class="ai-tag" id="aiTag1"></div>
+    <div class="ai-tag" id="aiTag2"></div>
+    <div class="hud-corner hud-left" id="hudP1"></div>
+    <div class="hud-corner hud-right" id="hudP2"></div>
+  </div>
+  <div class="fabs">
+    <button class="fab" id="arFab" title="Cycle aspect ratio">⇔</button>
+    <button class="fab" id="muteFab" title="Sound on/off">♪</button>
+    <button class="fab" id="fsFab" title="Fullscreen">⛶</button>
+    <button class="fab" id="menuFab" title="Menu (Esc)">☰</button>
+  </div>
+  <div class="pause-hint" id="pauseHint" style="display:none;">ESC — Menu · F3 — AI intent</div>
+  <div id="fps"></div>
+
+  <!-- START (main menu) -->
+  <div class="overlay menu" id="startScreen">
+    <div class="menu-shade"></div>
+    <div class="menu-col">
+      <div class="logo"><h1>LOONFIRE</h1><div class="logo-sub"><span></span>BALLOON WARS</div></div>
+      <button class="play" id="btnPlay" data-default>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg>
+        <span class="play-txt"><span class="play-label" id="playLabel">Quick Play</span><span class="play-sub"><i class="live"></i><span id="playSub">Online · finds an opponent for you</span></span></span>
+        <span class="play-key"><b class="kb">ENTER</b><b class="pb">A</b></span>
+      </button>
+      <div class="mode-list" role="group" aria-label="Game modes" id="modeList"></div>
+      <div class="diff-inline" id="diffInline">
+        <div class="mini-label">Wind Pilot</div>
+        <div class="seg" id="diffRow" role="group" aria-label="Difficulty"></div>
+        <div class="mini-label">Match</div>
+        <div class="seg" id="matchRow" role="group" aria-label="Match length"></div>
+        <div class="diff-desc" id="diffDesc"></div>
+      </div>
+      <div class="menu-icons">
+        <button class="ico" id="btnSettings" aria-label="Settings" title="Settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.6M12 18.6v2.6M21.2 12h-2.6M5.4 12H2.8M18.5 5.5l-1.8 1.8M7.3 16.7l-1.8 1.8M18.5 18.5l-1.8-1.8M7.3 7.3L5.5 5.5"/></svg></button>
+        <button class="ico" id="btnControlsMain" aria-label="Controls" title="Controls"><svg viewBox="0 0 24 24"><path d="M6.5 8h11a4 4 0 0 1 3.9 4.9l-.9 3.8a2.3 2.3 0 0 1-4 .9L14.6 16H9.4l-1.9 1.6a2.3 2.3 0 0 1-4-.9l-.9-3.8A4 4 0 0 1 6.5 8z"/><path d="M8 11v3M6.5 12.5h3"/></svg></button>
+        <button class="ico" id="btnSoundMain" aria-label="Sound" title="Sound on/off"><svg viewBox="0 0 24 24"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path class="wave" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg></button>
+        <button class="ico" id="btnFsMain" aria-label="Fullscreen" title="Fullscreen"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/></svg></button>
+      </div>
+      <div class="touch-note" id="touchNote">⚠ Loonfire needs a keyboard, a controller or a touch screen to play.</div>
+    </div>
+    <div class="tonight" id="tonightChip"><svg viewBox="0 0 30 30" id="tonightIcon"></svg><span><small>TONIGHT</small><b id="tonightText">—</b></span></div>
+    <div class="prompt-bar"><span class="pad-on" id="padName">Controller</span><span><b class="g a">A</b>Select</span><span><b class="g b">B</b>Back</span><span><b class="g r">MENU</b>Settings</span></div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div class="overlay settings" id="settingsScreen" style="display:none;">
+    <div class="set-panel">
+      <div class="set-tabs" role="tablist" id="setTabs"><h2>Settings</h2></div>
+      <div class="set-body"><div class="set-head"><span id="setTitle">Graphics</span><small id="setSub"></small></div><div id="setRows"></div></div>
+      <button class="set-close" id="btnSettingsClose" data-back aria-label="Close settings"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+  </div>
+
+  <!-- ONLINE LOBBY (matchmaking) -->
+  <div class="overlay online" id="onlineScreen" style="display:none;">
+    <div class="ol-wrap">
+      <div class="ol-top">
+        <span class="ol-title">Online Duel</span>
+        <div class="seg" id="netQueueSeg" role="group" aria-label="Queue"><button data-q="ranked">Ranked</button><button data-q="casual">Casual</button></div>
+        <span class="ol-chip" id="netOnlineChip"><i></i><span>Connecting…</span></span>
+      </div>
+      <div class="ol-cols">
+        <section class="ol-card ol-you" aria-label="Your pilot">
+          <small class="ol-k">YOU</small>
+          <input id="netName" maxlength="16" placeholder="Pilot" autocomplete="nickname" spellcheck="false" aria-label="Callsign">
+          <div class="ol-rank"><svg viewBox="0 0 40 44" aria-hidden="true"><path d="M20 2l16 7v12c0 10-7 17-16 21C11 38 4 31 4 21V9z"/><path class="st" d="M20 10l3 7h7l-6 4 2 8-6-5-6 5 2-8-6-4h7z"/></svg>
+            <span><b id="netRating">—</b><small id="netTier">Unranked</small></span></div>
+          <div class="ol-bar"><i id="netTierBar"></i></div>
+          <small class="ol-note" id="netTierNote">Play ranked matches to earn a rating.</small>
+          <div class="ol-wl"><span id="netWL">0 W · 0 L</span><span id="netStreak"></span></div>
+        </section>
+        <section class="ol-card ol-main" aria-live="polite">
+          <div id="netChoose">
+            <div class="ol-ready">Ready when you are</div>
+            <div class="ol-sub" id="netIdleNote">Ranked: matched by skill rating and ping. Real pilots first; a bot is only offered, never slipped in.</div>
+            <button class="play ol-go" id="netQuick" data-default><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg><span class="play-txt"><span class="play-label">Find a match</span></span></button>
+          </div>
+          <div id="netWait" style="display:none;">
+            <div class="ol-radar"><span></span><span></span><span></span><b id="netElapsed">0:00</b></div>
+            <div class="net-wait-text" id="netWaitText">Finding a fair opponent…</div>
+            <div class="ol-steps" id="netSteps"></div>
+            <div class="hint" id="netQueueInfo"></div>
+            <div class="modes" style="margin-top:6px;">
+              <button class="mode-btn small" id="netBotNow" style="display:none;">Fly vs. Wind Pilot while you wait</button>
+              <button class="mode-btn small ghost" id="netCancelQ">Cancel</button>
+            </div>
+          </div>
+          <div id="netFound" style="display:none;">
+            <div class="ol-k ok">OPPONENT FOUND</div>
+            <div class="ol-vs"><div class="ol-p a"><b id="netFoundMe">You</b><small id="netFoundMeR"></small></div><span>VS</span><div class="ol-p b"><b id="netFoundOpp">Pilot</b><small id="netFoundOppR"></small></div></div>
+            <div class="ol-sub" id="netFoundNote">Fair match · best of 3</div>
+            <div class="ol-count"><svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="52"/><circle class="arc" id="netCountArc" cx="60" cy="60" r="52"/></svg><b id="netCount">10</b></div>
+            <div class="modes"><button class="mode-btn small ghost" id="netDecline">Decline</button><button class="mode-btn" id="netAccept" data-default>Accept</button></div>
+          </div>
+          <div id="netRoomBox" style="display:none;">
+            <div class="ol-k">PRIVATE ROOM</div>
+            <div class="net-code" id="netRoomCode">-----</div>
+            <div class="net-join"><input id="netLink" readonly aria-label="Invite link"><button class="mode-btn small" id="netCopy">Copy invite link</button></div>
+            <div class="hint">Send the code or link to a friend. The match starts as soon as they join. Private rooms don't change your rating.</div>
+            <div class="modes" style="margin-top:10px;"><button class="mode-btn small ghost" id="netCancel">Cancel room</button></div>
+          </div>
+          <div class="tagline net-status" id="netStatus"></div>
+        </section>
+        <section class="ol-card ol-friend" aria-label="Play a friend">
+          <small class="ol-k">PLAY A FRIEND</small>
+          <div class="ol-sub" style="text-align:left">Private room — share a 5-letter code.</div>
+          <div class="seg" id="netLenRow" role="group" aria-label="Room length"></div>
+          <button class="mode-btn small ghost" id="netCreate">Create room</button>
+          <div class="net-join"><input id="netCode" maxlength="5" placeholder="CODE" autocomplete="off" spellcheck="false" autocapitalize="characters" aria-label="Room code"><button class="mode-btn small" id="netJoin">Join</button></div>
+          <small class="ol-k" style="margin-top:8px">LAST MATCHES</small>
+          <div class="ol-recent" id="netRecent"><div class="ol-sub" style="text-align:left">No ranked matches yet.</div></div>
+          <details class="options" id="netServerBox">
+            <summary>Game server</summary>
+            <input id="netServer" class="net-server" placeholder="wss://loonfire.example.com" spellcheck="false" autocomplete="off" aria-label="Game server">
+            <div class="hint" id="netServerHint"></div>
+          </details>
+          <button class="mode-btn small ghost" id="netFriend" style="display:none">Play a friend instead</button>
+        </section>
+      </div>
+      <div class="modes" style="margin-top:12px;"><button class="mode-btn small ghost" id="netBack" data-back>Back</button></div>
+    </div>
+  </div>
+
+  <!-- LOCAL GAME (same network) -->
+  <div class="overlay" id="lanScreen" style="display:none;">
+    <div class="panel">
+      <div class="title-line" style="font-size:clamp(28px,5vw,46px);">LOCAL GAME</div>
+      <div class="lan-radar" id="lanRadar"><span></span><span></span><span></span><i>✈</i></div>
+      <div class="net-wait-text" id="lanMain">Looking for another player on this network…</div>
+      <div class="tagline net-status" id="lanStatus"></div>
+      <div class="hint" id="lanHint">On the other phone, tablet or computer, open Loonfire and tap <b>Local Game</b>.<br>Both need to be on the same Wi-Fi or phone hotspot — that's it.</div>
+      <div id="lanCodeBox" style="display:none;">
+        <div class="section-label" style="margin-top:18px;">Not finding each other?</div>
+        <div class="hint" style="margin-bottom:8px;">This device's pair code is <b class="lan-code" id="lanMyCode">----</b> — or type the other device's code:</div>
+        <div class="net-join"><input id="lanCodeIn" maxlength="4" inputmode="numeric" placeholder="0000" autocomplete="off"><button class="mode-btn small" id="lanPairBtn">Pair</button></div>
+      </div>
+      <div class="modes" style="margin-top:16px;">
+        <button class="mode-btn small" id="lanRetry" style="display:none;">Look again</button>
+        <button class="mode-btn small ghost" id="lanBack" data-back>Back</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAUSE -->
+  <div class="overlay" id="pauseScreen" style="display:none;">
+    <div class="panel">
+      <div class="title-line" style="font-size:clamp(26px,4vw,40px);">FLIGHT MENU</div>
+      <div class="tagline" id="pauseSub">Paused mid-duel.</div>
+      <div class="modes">
+        <button class="mode-btn" id="btnResume" data-default>Resume Flight</button>
+        <button class="mode-btn ghost" id="btnPauseSettings">Settings</button>
+        <button class="mode-btn ghost" id="btnControls">Controls &amp; Kit</button>
+        <button class="mode-btn ghost" id="btnRestart">New Game (Same Setup)</button>
+        <button class="mode-btn danger" id="btnExitMenu">Exit to Main Menu</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="overlay" id="controlsScreen" style="display:none;">
+    <div class="panel">
+      <div class="title-line" style="font-size:clamp(26px,4vw,40px);">CONTROLS &amp; KIT</div>
+      <div class="controls-grid controls-fill"></div>
+      <div class="touch-help">
+        <b>Stick</b> (left): steer sideways, push up to burn, pull down to vent. <b>FIRE</b> (hold): Repeater. <b>ROCKET / FLAK</b>: fire that weapon now. <b>BOOST</b> dashes along the stick direction. Cooldown sweeps fill clockwise; red text means not enough fuel.
+      </div>
+      <div class="pad-map" id="padMap"></div>
+      <div class="section-label" style="margin-top:16px;">Weapons</div>
+      <div class="ability-glossary">
+        <div class="ab-row"><b>Repeater</b> — twin-barrel deck gun, fires dead level. Hold to stream tracers. No fuel cost, but every shot builds <i>heat</i>; hit 100 and the guns lock until they cool. Tracers can shoot down rockets, flak shells and bombs.</div>
+        <div class="ab-row"><b>Seeker Rocket</b> — drops from its rail, ignites, then steers with lead toward your rival. 2 in the rack, slow reload. Shoot-down-able.</div>
+        <div class="ab-row"><b>Flak Mortar</b> — lobbed shell with a proximity fuse that bursts at its closest pass. Heavy damage, one in the tube. Great from above.</div>
+        <div class="ab-row"><b>Drop Bomb</b> — release a weighted bomb straight down. Shedding the weight gives <i>you</i> a burst of lift.</div>
+      </div>
+      <div class="section-label" style="margin-top:14px;">Abilities</div>
+      <div class="ability-glossary">
+        <div class="ab-row"><b>Harpoon</b> — chain-hook that tethers your rival and reels them in for 1.4s, disrupting their steering and breaking any patch. Follow with a Shockwave.</div>
+        <div class="ab-row"><b>Vent Shockwave</b> — short-fused blast around you. Hurts anyone close, releases your tether, and swats enemy ordnance and hook lines out of the sky.</div>
+        <div class="ab-row"><b>Aegis Shield</b> — absorbs 80% of damage for 2s. Long cooldown, real fuel cost.</div>
+        <div class="ab-row"><b>Patch Kit</b> — channel 1.3s to restore hull. You can't steer or burn while patching, and a solid hit (or a harpoon) breaks it. Shield first if you're under pressure.</div>
+        <div class="ab-row"><b>Flare</b> — drop a slow-burning flare that lights up the fog around it, revealing any pilot hiding nearby for several seconds.</div>
+        <div class="ab-row"><b>Gas Lamps</b> — hover beside a lit lamp to refuel from its gas main (it runs dry if you camp). Its light gives away anyone near it. Shoot the glass and the gas bursts — dangerous to anyone close.</div>
+        <div class="ab-row"><b>Wind</b> — every altitude layer blows its own way and changes over time; climb or drop to steer. Gusts are announced a few seconds ahead. The two warm columns (rising sparks) give free lift.</div>
+        <div class="ab-row"><b>Afterburner Boost</b> — the basket thrusters dump fuel for a hard dash in your steering direction (add up/down for an angled dash). Snaps any hook line on you.</div>
+      </div>
+      <div class="hint">Esc reopens this menu at any time. F3 shows what each Wind Pilot is thinking.</div>
+      <div class="modes" style="margin-top:12px;"><button class="mode-btn small" id="btnControlsBack" data-back>Back</button></div>
+    </div>
+  </div>
+
+  <!-- END -->
+  <div class="overlay" id="endScreen" style="display:none;">
+    <div class="panel">
+      <div class="title-line" id="endTitle" style="font-size:clamp(28px,5vw,46px);">DEFLATED!</div>
+      <div class="tagline" id="endSub"></div>
+      <div class="rating-line" id="endRating" style="display:none"></div>
+      <div class="end-stats" id="endStats"></div>
+      <div class="modes">
+        <button class="mode-btn" id="restartBtn" data-default>Fly Again</button>
+        <button class="mode-btn ghost" id="btnEndMenu">Main Menu</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

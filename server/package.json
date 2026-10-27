@@ -1,0 +1,18 @@
+{
+  "name": "loonfire-server",
+  "version": "1.0.0",
+  "description": "Authoritative online multiplayer server for Loonfire (ranked matchmaking, local-game pairing)",
+  "main": "server.js",
+  "private": true,
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "pg": "^8.23.1",
+    "ws": "^8.18.0"
+  }
+}

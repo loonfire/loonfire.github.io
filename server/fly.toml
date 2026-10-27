@@ -1,0 +1,27 @@
+# Fly.io — `fly launch --copy-config` from this folder, then `fly deploy`.
+# Matches live in memory, so run exactly ONE machine: `fly scale count 1`.
+app = "loonfire"
+primary_region = "syd"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "stop"     # sleeps when nobody is connected
+  auto_start_machines = true
+  min_machines_running = 0
+  [http_service.concurrency]
+    type = "connections"
+    soft_limit = 1500
+    hard_limit = 2000
+
+  [[http_service.checks]]
+    grace_period = "5s"
+    interval = "30s"
+    method = "GET"
+    path = "/healthz"
+    timeout = "3s"
+
+[[vm]]
+  memory = "256mb"
+  cpu_kind = "shared"
+  cpus = 1

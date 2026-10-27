@@ -1,0 +1,14 @@
+# Render Blueprint (repo root) — Render → New → Blueprint → pick this repo.
+services:
+  - type: web
+    name: loonfire
+    runtime: node
+    rootDir: server
+    buildCommand: npm ci --omit=dev
+    startCommand: node server.js
+    healthCheckPath: /healthz
+    plan: free
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      # Ratings: add DATABASE_URL (Supabase / Neon Postgres) in the Render dashboard → Environment.
